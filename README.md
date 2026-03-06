@@ -1,16 +1,16 @@
-# Qt Quick Template
+# Qt Quick Common Lib
 
 ## 🚀 [Build Status]
 
 ### 🛠 Build and ✅ Test
 
-[![Linux Build and Test](https://github.com/Dingola/QtQuickTemplate/actions/workflows/build_and_test_linux.yml/badge.svg)](https://github.com/Dingola/QtQuickTemplate/actions/workflows/build_and_test_linux.yml)
-[![macOS Build and Test](https://github.com/Dingola/QtQuickTemplate/actions/workflows/build_and_test_macos.yml/badge.svg)](https://github.com/Dingola/QtQuickTemplate/actions/workflows/build_and_test_macos.yml)
-[![Windows Build and Test](https://github.com/Dingola/QtQuickTemplate/actions/workflows/build_and_test_windows.yml/badge.svg)](https://github.com/Dingola/QtQuickTemplate/actions/workflows/build_and_test_windows.yml)
+[![Linux Build and Test](https://github.com/Dingola/QtQuickCommonLib/actions/workflows/build_and_test_linux.yml/badge.svg)](https://github.com/Dingola/QtQuickCommonLib/actions/workflows/build_and_test_linux.yml)
+[![macOS Build and Test](https://github.com/Dingola/QtQuickCommonLib/actions/workflows/build_and_test_macos.yml/badge.svg)](https://github.com/Dingola/QtQuickCommonLib/actions/workflows/build_and_test_macos.yml)
+[![Windows Build and Test](https://github.com/Dingola/QtQuickCommonLib/actions/workflows/build_and_test_windows.yml/badge.svg)](https://github.com/Dingola/QtQuickCommonLib/actions/workflows/build_and_test_windows.yml)
 
 ### Code Coverage
 
-[![codecov](https://codecov.io/github/Dingola/QtQuickTemplate/graph/badge.svg?token=XH7TDPWZUJ)](https://codecov.io/github/Dingola/QtQuickTemplate)
+[![codecov](https://codecov.io/github/Dingola/QtQuickCommonLib/graph/badge.svg?token=T4QADZDOIA)](https://codecov.io/github/Dingola/QtQuickCommonLib)
 
 <br><br>
 
@@ -36,24 +36,27 @@
 <br><br>
 
 ## [Description]
-This project is a template for creating QML-based desktop applications with a C++ backend. The solution 
-is divided into two parts: the main project and a test project. By default, only the 
+**QtQuickCommonLib** is a specialized foundational library designed to streamline the development
+of **Qt Quick-based desktop applications**. It serves as a shared toolkit containing reusable services,
+utilities, and custom UI components that are essential for modern desktop interfaces.
+
+The solution is divided into two parts: the main project and a test project. By default, only the
 main project is built. The test project can be built if desired, controlled by a CMake 
 boolean variable `<PROJECT_NAME>_BUILD_TEST_PROJECT`. Additionally, the CMake variable 
 `<PROJECT_NAME>_BUILD_TARGET_TYPE` must be set to `static_library` for the test project 
 to be executed.
 
-The template provides a minimal starting point for Qt Quick applications, supports documentation 
-generation with Doxygen, and includes GitHub workflows (CI builds) for Linux, Mac and Windows.
+The project configuration supports documentation generation with Doxygen and includes GitHub
+workflows (CI builds) for Mac, Linux and Windows.
 <br><br>
 
 ## 📊 [Code Coverage Graphs]
 
 | Graph     | Description                                                                                                                                                                                                                     | Visualization                                                                 |
 |-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| **Sunburst** | The inner-most circle represents the entire project. Moving outward are folders, and finally individual files. The size and color of each slice represent the number of statements and the coverage, respectively. | <img src="https://codecov.io/github/Dingola/QtQuickTemplate/graphs/sunburst.svg?token=XH7TDPWZUJ" alt="Sunburst" height="100" width="200"> |
-| **Grid**     | Each block represents a single file in the project. The size and color of each block represent the number of statements and the coverage, respectively.                                                                      | <img src="https://codecov.io/github/Dingola/QtQuickTemplate/graphs/tree.svg?token=XH7TDPWZUJ" alt="Grid" height="100" width="200">         |
-| **Icicle**   | The top section represents the entire project, followed by folders and individual files. The size and color of each slice represent the number of statements and the coverage, respectively.                                 | <img src="https://codecov.io/github/Dingola/QtQuickTemplate/graphs/icicle.svg?token=XH7TDPWZUJ" alt="Icicle" height="150" width="400">     |
+| **Sunburst** | The inner-most circle represents the entire project. Moving outward are folders, and finally individual files. The size and color of each slice represent the number of statements and the coverage, respectively. | <img src="https://codecov.io/github/Dingola/QtQuickCommonLib/graphs/sunburst.svg?token=T4QADZDOIA" alt="Sunburst" height="100" width="200"> |
+| **Grid**     | Each block represents a single file in the project. The size and color of each block represent the number of statements and the coverage, respectively.                                                                      | <img src="https://codecov.io/github/Dingola/QtQuickCommonLib/graphs/tree.svg?token=T4QADZDOIA" alt="Grid" height="100" width="200">         |
+| **Icicle**   | The top section represents the entire project, followed by folders and individual files. The size and color of each slice represent the number of statements and the coverage, respectively.                                 | <img src="https://codecov.io/github/Dingola/QtQuickCommonLib/graphs/icicle.svg?token=T4QADZDOIA" alt="Icicle" height="150" width="400">     |
 
 <br><br>
 
@@ -218,8 +221,8 @@ Once you have generated the required tokens, add them as secrets in your GitHub 
 
 ### 2) Setting up
 ```
-git clone https://github.com/Dingola/QtQuickTemplate.git
-cd QtQuickTemplate/
+git clone https://github.com/Dingola/QtQuickCommonLib.git
+cd QtQuickCommonLib/
 ```
 <br>
 
@@ -241,8 +244,8 @@ cmake --build . --config Release
 
 ### 4) Run the project
 ```
-cd QtQuickTemplate/Release/
-./QtQuickTemplate.exe
+cd QtQuickCommonLib/Release/
+./QtQuickCommonLib.exe
 ```
 <br>
 
@@ -269,29 +272,29 @@ To create an NSIS installer (Windows only), set `BUILD_NSIS_INSTALLER` to `true`
 #### 1. Build the Docker Image
 Build the Docker image using the following command:
 ```
-docker build -t qtquicktemplate-dockerimage .
+docker build -t qtquickcommonlib-dockerimage .
 ```
 <br>
 
 #### 2. Ways to Run the Docker Image
 - **Run directly:**
 ```
-docker run qtquicktemplate-dockerimage
+docker run qtquickcommonlib-dockerimage
 ```
 - **Start an interactive Bash shell:**
 ```
-docker run -it qtquicktemplate-dockerimage bash
+docker run -it qtquickcommonlibe-dockerimage bash
 ```
 <br>
 
 #### 3. Run the App or Tests in the Container
 - **Start the app (virtual display with Xvfb):**
 ```
-Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp & export DISPLAY=:99 && ./_build_app_release/QML_Project/QtQuickTemplate
+Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp & export DISPLAY=:99 && ./_build_app_release/QML_Project/QtQuickCommonLib
 ```
 - **Run the tests (virtual display with Xvfb):**
 ```
-Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp & export DISPLAY=:99 && ./_build_tests_release/QML_Project_Tests/QtQuickTemplate_Tests
+Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp & export DISPLAY=:99 && ./_build_tests_release/QML_Project_Tests/QtQuickCommonLib_Tests
 ```
 <br>
 
@@ -304,7 +307,7 @@ Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp & export DISPLAY=:99 && ./_build_t
    - Alternatively, use the preconfigured `config.xlaunch` file located in the `Configs` folder of this project. Double-click the file to launch VcXsrv with the correct settings.
 3. Start the Docker container:
 ```
-docker run -it --name QtQuickTemplate-Container --network host -e DISPLAY=<IP-ADDRESS>:99.0 -e TERM=xterm-256color -e QT_X11_NO_MITSHM=1 QtQuickTemplate-DockerImage bash
+docker run -it --name QtQuickCommonLib-Container --network host -e DISPLAY=<IP-ADDRESS>:99.0 -e TERM=xterm-256color -e QT_X11_NO_MITSHM=1 QtQuickCommonLib-DockerImage bash
 ```
 > [!NOTE]
 > Replace `<IP-ADDRESS>` with the host's IP address (e.g., `192.168.1.2`). Do not use `127.0.0.1` or `localhost`.
@@ -312,11 +315,11 @@ docker run -it --name QtQuickTemplate-Container --network host -e DISPLAY=<IP-AD
 4. Inside the container:
 - **Start the app:**
 ```
-"./_build_app_release/QML_Project/QtQuickTemplate"
+"./_build_app_release/QML_Project/QtQuickCommonLib"
 ```
 - **Run the tests:**
 ```
-"./_build_tests_release/QML_Project_Tests/QtQuickTemplate_Tests"
+"./_build_tests_release/QML_Project_Tests/QtQuickCommonLib_Tests"
 ```
 <br>
 
@@ -338,7 +341,7 @@ export DISPLAY=192.168.1.2:99.0
 <br><br><br>
 
 ## [Translations]
-The project includes custom targets for updating and compiling translation files. These targets are defined in the CMake file located in `QtQuickTemplate/QML_Project` and can be used to manage translation files located in the `QtQuickTemplate/QML_Project/resources/Translations` directory.
+The project includes custom targets for updating and compiling translation files. These targets are defined in the CMake file located in `QtQuickCommonLib/QML_Project` and can be used to manage translation files located in the `QtQuickCommonLib/QML_Project/resources/Translations` directory.
 
 > [!NOTE]
 > The translation files are specified in the CMake file. Initially, only `app_de.ts` and `app_en.ts` are included. To support additional languages, you will need to add the corresponding `.ts` files to the CMake configuration.
