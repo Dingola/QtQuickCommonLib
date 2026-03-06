@@ -4,8 +4,10 @@
  */
 
 #include <QGuiApplication>
+#include <QQuickStyle>
 
-#include "QtQuickTemplate/QMLApplication.h"
+#include "QtQuickCommonLib/QMLApplication.h"
+#include "QtQuickCommonLib/Views/AppWindow.h"
 
 // GCOVR_EXCL_START  LCOV_EXCL_START
 
@@ -23,12 +25,19 @@ auto main(int argc, char* argv[]) -> int
     // static linking.
     Q_INIT_RESOURCE(resources);
 
+    // Prefer OpenGLES (often better for 2D QML interfaces on Windows).
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
+
+    // Set the style to "Basic" to allow full customization of controls (backgrounds, etc.)
+    // Native styles (like Windows) do not support overwriting background/contentItem.
+    QQuickStyle::setStyle("Basic");
 
     QGuiApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("QtQuickApp"));
-    app.setOrganizationName(QStringLiteral("QtQuickTemplate"));
+    app.setOrganizationName(QStringLiteral("QtQuickCommonLib"));
     app.setOrganizationDomain(QStringLiteral("AdrianHelbig.de"));
+
+    qmlRegisterType<QtQuickCommonLib::AppWindow>("QtQuickCommonLib", 1, 0, "AppWindow");
 
     QMLApplication qml_app;
 

@@ -3,7 +3,7 @@
  * @brief Implementation of the QMLApplication class.
  */
 
-#include "QtQuickTemplate/QMLApplication.h"
+#include "QtQuickCommonLib/QMLApplication.h"
 
 #include <QApplication>
 #include <QDebug>
