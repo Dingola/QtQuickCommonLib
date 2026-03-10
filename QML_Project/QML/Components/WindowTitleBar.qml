@@ -23,10 +23,44 @@ Item {
     signal maximizeRequested()
     signal restoreRequested()
     signal closeRequested()
+    signal dragRequested()
+    signal titleBarDoubleClicked()
 
     Rectangle {
         anchors.fill: parent
         color: root.backgroundColor
+    }
+
+    Item {
+        id: titleBarGestureArea
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: window_controls_row.left
+        anchors.bottom: parent.bottom
+
+        DragHandler {
+            target: null
+            enabled: Qt.platform.os === "linux"
+            acceptedButtons: Qt.LeftButton
+
+            onActiveChanged: {
+                if (active) {
+                    root.dragRequested()
+                }
+            }
+        }
+
+        TapHandler {
+            acceptedButtons: Qt.LeftButton
+            gesturePolicy: TapHandler.ReleaseWithinBounds
+            enabled: Qt.platform.os === "linux"
+
+            onDoubleTapped: function(eventPoint, button) {
+                if (button === Qt.LeftButton) {
+                    root.titleBarDoubleClicked()
+                }
+            }
+        }
     }
 
     Label {

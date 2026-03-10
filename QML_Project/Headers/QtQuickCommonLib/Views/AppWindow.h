@@ -3,6 +3,7 @@
 #include <QEvent>
 #include <QQuickItem>
 #include <QQuickWindow>
+#include <memory>
 
 #include "QtQuickCommonLib/ApiMacro.h"
 
@@ -12,6 +13,9 @@
 
 namespace QtQuickCommonLib
 {
+
+class AppWindowLinux;
+class AppWindowWin;
 
 /**
  * @class AppWindow
@@ -238,6 +242,27 @@ class QTQUICKCOMMONLIB_API AppWindow: public QQuickWindow
          */
         [[nodiscard]] auto get_is_maximized_native() const -> bool;
 
+        /**
+         * @brief Start a system-managed window move operation.
+         *
+         * This is used by the Linux title bar implementation to delegate moving of the
+         * frameless window back to the window manager/compositor.
+         *
+         * @return bool True if the system move operation was started successfully.
+         */
+        Q_INVOKABLE bool start_system_move();
+
+        /**
+         * @brief Start a system-managed window resize operation.
+         *
+         * This is used by the Linux frameless window implementation to delegate resize handling
+         * back to the window manager/compositor.
+         *
+         * @param edges Window edges that should participate in the resize operation.
+         * @return bool True if the system resize operation was started successfully.
+         */
+        Q_INVOKABLE bool start_system_resize(Qt::Edges edges);
+
     protected:
         /**
          * @brief Native event filter for Windows messages.
@@ -262,6 +287,12 @@ class QTQUICKCOMMONLIB_API AppWindow: public QQuickWindow
          * @return bool Result of QQuickWindow::event(event).
          */
         auto event(QEvent* event) -> bool override;
+
+    private:
+        /**
+         * @brief Refresh cached isMaximizedNative state and emit change signal when needed.
+         */
+        auto refresh_is_maximized_native() -> void;
 
     signals:
         /**
@@ -304,130 +335,10 @@ class QTQUICKCOMMONLIB_API AppWindow: public QQuickWindow
          */
         void is_maximized_native_changed();
 
-    private:  // private methods (Windows-only)
-#ifdef Q_OS_WIN
-        /**
-         * @brief Return the native HWND for this window.
-         *
-         * Uses winId() and casts to HWND. Callers must ensure the native window exists
-         * (create()) before using the returned handle.
-         *
-         * @return HWND native window handle, or nullptr if not created.
-         */
-        [[nodiscard]] auto native_window_handle() const -> HWND;
-
-        /**
-         * @brief Returns the system resize border thickness in pixels (DPI-aware).
-         *
-         * Uses SM_CXSIZEFRAME + SM_CXPADDEDBORDER scaled for the window's DPI.
-         *
-         * @return int Total border width in pixels for the current DPI.
-         */
-        [[nodiscard]] auto system_resize_border_width() const -> int;
-
-        /**
-         * @brief Returns the system resize border thickness in pixels (DPI-aware).
-         *
-         * Uses SM_CYSIZEFRAME + SM_CXPADDEDBORDER scaled for the window's DPI.
-         *
-         * @return int Total border height in pixels for the current DPI.
-         */
-        [[nodiscard]] auto system_resize_border_height() const -> int;
-
-        /**
-         * @brief Returns the system caption (titlebar) height in pixels (DPI-aware).
-         *
-         * Uses SM_CYCAPTION scaled for the window's DPI.
-         *
-         * @return int Caption height in pixels for the current DPI.
-         */
-        [[nodiscard]] auto system_caption_height() const -> int;
-
-        /**
-         * @brief Enable required native window styles for snap and resize behavior.
-         */
-        auto enable_native_window_styles() -> void;
-
-        /**
-         * @brief Extend DWM frame into client area to avoid white borders.
-         *
-         * When DWM composition is available, extends a 1px margin to avoid white border artifacts.
-         * Otherwise applies a drop-shadow via class style as a best-effort fallback.
-         */
-        auto extend_frame_into_client_area() -> void;
-
-        /**
-         * @brief Enable Windows 11 specific DWM features if available.
-         *
-         * Applies rounded corners and optional Mica backdrop, gated by runtime availability and
-         * user preferences set via set_use_mica() and set_use_rounded_corners().
-         * Also attempts to enable immersive dark mode for borders/caption where supported.
-         */
-        auto enable_win11_features() -> void;
-
-        /**
-         * @brief Perform custom hit-testing for frameless window.
-         *
-         * @param msg Native MSG pointer.
-         * @return LRESULT Hit-test code.
-         */
-        auto handle_nc_hit_test(MSG* msg) -> LRESULT;
-
-        /**
-         * @brief Handle WM_GETMINMAXINFO so maximize fits monitor work area.
-         *
-         * Also applies the current minimum tracking size derived from the QQuickWindow minimum
-         * size properties.
-         *
-         * @param msg Native MSG pointer.
-         */
-        auto handle_get_min_max_info(MSG* msg) -> void;
-
-        /**
-         * @brief Test whether a global point is over a specific QML item.
-         *
-         * This is used by WM_NCHITTEST to reliably distinguish interactive controls
-         * from draggable caption areas.
-         *
-         * @param item Item to test (may be nullptr).
-         * @param global_x Global x in screen coordinates.
-         * @param global_y Global y in screen coordinates.
-         * @return true when the point is inside the item bounds; false otherwise.
-         */
-        [[nodiscard]] auto is_over_qml_item(const QQuickItem* item, int global_x,
-                                            int global_y) const -> bool;
-
-        /**
-         * @brief Test whether a global point is over a specific QML item or one of its children.
-         *
-         * This is used by WM_NCHITTEST for interactive title bar containers whose child items
-         * should remain clickable while whitespace outside those child items stays draggable.
-         *
-         * @param item Root item to test (may be nullptr).
-         * @param global_x Global x in screen coordinates.
-         * @param global_y Global y in screen coordinates.
-         * @return true when the point is inside the item or one of its child items; false
-         * otherwise.
-         */
-        [[nodiscard]] auto is_over_qml_item_or_child(const QQuickItem* item, int global_x,
-                                                     int global_y) const -> bool;
-#endif
-
-        /**
-         * @brief Refresh cached isMaximizedNative state and emit change signal when needed.
-         */
-        auto refresh_is_maximized_native() -> void;
-
-        /**
-         * @brief Re-apply maximized state after a minimize/restore cycle when Qt restored the
-         *        frameless window to the normal state.
-         *
-         * This helper queues a maximize request only when the window was maximized before
-         * minimizing and the restored Qt/native state is no longer maximized.
-         */
-        auto restore_maximized_state_if_needed() -> void;
-
     private:
+        friend class AppWindowLinux;
+        friend class AppWindowWin;
+
         QQuickItem* m_title_bar_item = nullptr;
         QQuickItem* m_minimize_button_item = nullptr;
         QQuickItem* m_maximize_button_item = nullptr;
@@ -442,15 +353,8 @@ class QTQUICKCOMMONLIB_API AppWindow: public QQuickWindow
          */
         bool m_is_maximized_native = false;
 
-        /**
-         * @brief Cached state used to remember whether the window was maximized before minimizing.
-         */
-        bool m_was_maximized_before_minimize = false;
-
-        /**
-         * @brief Guard flag preventing multiple queued maximize restores for the same cycle.
-         */
-        bool m_restore_maximized_queued = false;
+        std::unique_ptr<AppWindowLinux> m_app_window_linux;
+        std::unique_ptr<AppWindowWin> m_app_window_win;
 };
 
 }  // namespace QtQuickCommonLib
